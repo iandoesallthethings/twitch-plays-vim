@@ -1,5 +1,7 @@
 import { attach } from 'neovim'
-import winston from 'winston'
+import type { LeveledLogMethod } from 'winston'
+
+const noop = (..._: any[]) => {}
 
 export const client = attach({
 	// @ts-ignore This totally works
@@ -10,10 +12,10 @@ export const client = attach({
 	options: {
 		logger: {
 			level: 'info',
-			info: console.log as winston.LeveledLogMethod,
-			warn: console.warn as winston.LeveledLogMethod,
-			error: console.error as winston.LeveledLogMethod,
-			debug: ((_: any[]) => {}) as winston.LeveledLogMethod
+			info: console.log as LeveledLogMethod,
+			warn: console.warn as LeveledLogMethod,
+			error: console.error as LeveledLogMethod,
+			debug: noop as LeveledLogMethod // Neovim has a logger.debug call that won't shut up.
 		}
 	}
 })
