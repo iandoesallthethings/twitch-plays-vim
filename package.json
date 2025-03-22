@@ -1,0 +1,31 @@
+{
+	"name": "twitch-plays-vim",
+	"version": "0.1.0",
+	"description": "Does what it says on the tin.",
+	"author": "SkålKid",
+	"main": "index.ts",
+	"type": "module",
+	"scripts": {
+		"dev": "bun run index.ts",
+		"watch": "bun --watch run index.ts",
+		"nvim": "nvim --listen 0.0.0.0:9999",
+		"tmux": "tmux",
+		"docker:build": "docker-compose build --no-cache",
+		"docker:up": "docker-compose up -d",
+		"docker:down": "docker-compose down",
+		"docker:attach": "docker-compose attach twitch-plays-vim",
+		"docker:logs": "docker-compose logs -f",
+		"docker:restart": "bun run docker:down && bun run docker:build && bun run docker:up",
+		"docker:clean": "docker-compose down -v --remove-orphans"
+	},
+	"dependencies": {
+		"@twurple/auth": "^7.2.1",
+		"@twurple/chat": "^7.2.1",
+		"neovim": "^5.3.0"
+	},
+	"devDependencies": {
+		"@types/node": "^22.13.11",
+		"@types/bun": "latest",
+		"typescript": "^5.8.2"
+	}
+}

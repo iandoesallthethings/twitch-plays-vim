@@ -1,0 +1,38 @@
+services:
+  twitch-plays-vim:
+    build: .
+    tty: true
+    stdin_open: true
+    ports:
+      - '9999:9999'
+    volumes:
+      - ./playground:/playground
+      - ./init.lua:/home/vimuser/.config/nvim/init.lua
+    environment:
+      - ALLOW_CONSOLE=1
+      - TWITCH_CHANNEL=skalkid
+    restart: unless-stopped
+    # Add security configurations
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /home/vimuser/.local
+      - /home/vimuser/.local/state
+      - /home/vimuser/.local/share
+      - /home/vimuser/.cache
+    # Set resource limits to prevent DoS
+    mem_limit: 512m
+    memswap_limit: 512m
+    pids_limit: 100
+    ulimits:
+      nproc: 100
+      nofile:
+        soft: 1024
+        hard: 1024
+
+volumes:
+  nvim-config:
