@@ -9,13 +9,9 @@
 		"dev": "bun run index.ts",
 		"watch": "bun --watch run index.ts",
 		"nvim": "nvim --listen 0.0.0.0:9999",
-		"tmux": "tmux",
-		"docker:build": "docker-compose build --no-cache",
-		"docker:up": "docker-compose up -d",
-		"docker:down": "docker-compose down",
-		"docker:attach": "docker-compose attach twitch-plays-vim",
-		"docker:logs": "docker-compose logs -f",
-		"docker:restart": "bun run docker:down && bun run docker:build && bun run docker:up",
+		"restart": "docker-compose down && docker-compose build && docker-compose up -d",
+		"attach:vim": "docker-compose attach twitch-plays-vim",
+		"attach:bash": "docker compose exec twitch-plays-vim bash",
 		"docker:clean": "docker-compose down -v --remove-orphans"
 	},
 	"dependencies": {

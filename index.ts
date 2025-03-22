@@ -1,14 +1,11 @@
 import * as Twitch from './lib/Twitch'
 import * as Nvim from './lib/Nvim'
 
-Twitch.init((channel, user, message) => {
-	const sanitized = sanitize(message)
-	console.log(`[${channel}] ${user}: ${sanitized}`)
-	Nvim.send(sanitized)
-})
+Twitch.init((_channel, user, message) => {
+	const result = Nvim.applyRules(message, user)
 
-function sanitize(message: string) {
-	return message //
-		.trim()
-	// .slice(0, 100)
-}
+	if (!result.valid) return
+
+	console.log(`[${user}] ${result.message}`)
+	Nvim.send(result.message)
+})
