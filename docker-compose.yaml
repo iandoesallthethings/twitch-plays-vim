@@ -1,17 +1,32 @@
 services:
+  vpn:
+    image: ghcr.io/bubuntux/nordlynx:latest
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - TOKEN=${NORDVPN_TOKEN}
+      - PRIVATE_KEY=${NORDVPN_PRIVATE_KEY}
+    sysctls:
+      - net.ipv4.conf.all.rp_filter=2
+      - net.ipv4.ip_forward=1
+    ports:
+      - '127.0.0.1:9999:9999'
+    restart: unless-stopped
+
   twitch-plays-vim:
     build: .
+    network_mode: service:vpn
     tty: true
     stdin_open: true
-    ports:
-      - '9999:9999'
     volumes:
       - ./playground:/playground
       - ./init.lua:/home/vimuser/.config/nvim/init.lua
     environment:
       - ALLOW_CONSOLE=1
       - TWITCH_CHANNEL=skalkid
-    restart: unless-stopped
+    depends_on:
+      - vpn
     # Add security configurations
     security_opt:
       - no-new-privileges:true
@@ -33,6 +48,3 @@ services:
       nofile:
         soft: 1024
         hard: 1024
-
-volumes:
-  nvim-config:
