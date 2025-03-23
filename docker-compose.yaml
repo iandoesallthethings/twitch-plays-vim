@@ -1,5 +1,7 @@
 services:
   vpn:
+    profiles:
+      - ${USE_VPN:-false}
     image: ghcr.io/bubuntux/nordlynx:latest
     cap_add:
       - NET_ADMIN
@@ -16,7 +18,7 @@ services:
 
   twitch-plays-vim:
     build: .
-    network_mode: service:vpn
+    network_mode: ${USE_VPN:+service:vpn}${USE_VPN:-bridge}
     tty: true
     stdin_open: true
     volumes:
@@ -25,8 +27,12 @@ services:
     environment:
       - ALLOW_CONSOLE=1
       - TWITCH_CHANNEL=skalkid
+    ports:
+      - ${USE_VPN:+""}${USE_VPN:-127.0.0.1:9999:9999}
     depends_on:
-      - vpn
+      vpn:
+        condition: service_started
+        required: false
     # Add security configurations
     security_opt:
       - no-new-privileges:true
