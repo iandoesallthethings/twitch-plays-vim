@@ -1,24 +1,39 @@
 # Twitch Plays Vim
 
-Listens to twitch. Sends to vim.
+Listens to Twitch. Sends to vim.
+
+## Config
+
+Just needs a few `.env` things
 
 ```bash
-# Build
-docker build -t twitch-vim .
-# Run
-docker run -it -v $(pwd)/vim-playground:/home/vimuser/playground twitch-vim
+COMPOSE_BAKE=true                   # Makes docker build faster
+ALLOW_CONSOLE=1                     # The neovim library hijacks stdout, so they use winston
+TWITCH_CHANNEL=yourtwitchchannel    # What chat stream to listen to
+```
 
-# Attach
-docker attach container_name
-# or
-docker exec -it container_name tmux attach
+## Running
 
+```bash
+# Get set up
+bun install
+
+# Build and run
+bun restart
+
+# Attach to the vim window to watch
+bun attach:vim
+
+# Attach to bash to install stuff and junk (optional)
+bun attach:bash
+
+# Then run the server to route commands
+bun run watch
 ```
 
 ## TODO
 
 - [x] Look into restricted mode (-z) Looks like it's removed.
-- [ ] Readonly filesystem except project dir
-- [ ] Use a porable version of neovim?
-- [ ] Figure out the vm thing
-- [ ] Point neovim at the smaller init.lua rather than my real one?
+- [x] Readonly filesystem except project dir
+- [x] Figure out the vm thing
+- [x] Point neovim at the smaller init.lua rather than my real one?

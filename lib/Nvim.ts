@@ -1,6 +1,8 @@
 import { attach } from 'neovim'
 import type { LeveledLogMethod } from 'winston'
 
+const PREFIX = '!v'
+
 const noop = (..._: any[]) => {}
 
 export const client = attach({
@@ -55,7 +57,7 @@ const rules: Rule[] = [
 		name: 'Message must start with !vim',
 		enabled: true,
 		silent: true, // Don't log when messages don't start with !vim
-		run: (msg) => (msg.toLowerCase().startsWith('!vim') ? msg : false)
+		run: (msg) => (msg.toLowerCase().startsWith(PREFIX) ? msg : false)
 	},
 	{
 		name: 'No prohibited words',
@@ -68,7 +70,7 @@ const rules: Rule[] = [
 	{
 		name: 'removePrefix',
 		enabled: true,
-		run: (msg) => msg.replace(/^!vim\s*/i, '')
+		run: (msg) => msg.replace(PREFIX, '')
 	},
 	{
 		name: 'cleanup',
