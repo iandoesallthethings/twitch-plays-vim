@@ -1,23 +1,23 @@
 import { attach } from 'neovim'
+import dedent from 'ts-dedent'
 import type { LeveledLogMethod } from 'winston'
 
 const PREFIX = '!v'
+const BANNED = [':q', ':qa', ':wq', ':wq!', ':ZZ', ':ZQ']
+const MAX_LENGTH = 100
 
 const noop = (..._: any[]) => {}
 
 export const client = attach({
 	// @ts-ignore This totally works
-	socket: {
-		host: '0.0.0.0',
-		port: 9999
-	},
+	socket: { host: '0.0.0.0', port: 9999 },
 	options: {
 		logger: {
 			level: 'info',
 			info: console.log as LeveledLogMethod,
 			warn: console.warn as LeveledLogMethod,
 			error: console.error as LeveledLogMethod,
-			debug: noop as LeveledLogMethod // Neovim has a logger.debug call that won't shut up.
+			debug: noop as LeveledLogMethod // Neovim has a random logger.debug call that won't shut up.
 		}
 	}
 })
@@ -54,30 +54,39 @@ export function applyRules(message: string, user: string) {
 
 const rules: Rule[] = [
 	{
-		name: 'Message must start with !vim',
+		name: `Command prefix: ${PREFIX}`,
 		enabled: true,
 		silent: true, // Don't log when messages don't start with !vim
-		run: (msg) => (msg.toLowerCase().startsWith(PREFIX) ? msg : false)
+		run: (msg) => (msg.toLowerCase().startsWith(PREFIX) ? msg.replace(PREFIX, '') : false)
 	},
 	{
-		name: 'No prohibited words',
-		enabled: false,
-		run: (msg) => {
-			const banned = ['badword1', 'badword2']
-			return banned.some((word) => msg.toLowerCase().includes(word)) ? false : msg
-		}
-	},
-	{
-		name: 'removePrefix',
+		name: `Banned words: ${BANNED.join(', ')}`,
 		enabled: true,
-		run: (msg) => msg.replace(PREFIX, '')
+		run: (msg) => (BANNED.some((word) => msg.toLowerCase().includes(word)) ? false : msg)
+	},
+	{
+		name: `Max length: ${MAX_LENGTH}`,
+		enabled: false,
+		run: (msg) => msg.trim().slice(0, MAX_LENGTH)
 	},
 	{
 		name: 'cleanup',
 		enabled: true,
-		run: (msg) => msg.trim().replace(/\s+/g, ' ').slice(0, 100)
+		run: (msg) => msg.trim()
 	}
 ]
+
+export function printRules() {
+	const enabled = rules
+		.filter((r) => r.enabled)
+		.map((r) => r.name)
+		.join(`\n  - `)
+
+	console.log(dedent`
+		Enabled rules:
+		  - ${enabled}
+	`)
+}
 
 // Testing
 if (import.meta.main) {

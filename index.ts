@@ -9,3 +9,13 @@ Twitch.init((_channel, user, message) => {
 	console.log(`[${user}] ${result.message}`)
 	Nvim.send(result.message)
 })
+
+for await (const input of console) {
+	switch (input.trim()) {
+		case 'rules':
+			Nvim.printRules()
+			break
+		default:
+			console.log('Unknown command')
+	}
+}
