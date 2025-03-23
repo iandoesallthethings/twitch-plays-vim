@@ -39,9 +39,9 @@ bun run watch
 ## TODO
 
 - [x] ~~Look into restricted mode (-z)~~ Looks like it's removed.
-- [x] Readonly filesystem except project dir
-- [x] Figure out the vm thing (ended up going with docker)
 - [x] Point neovim at the smaller init.lua rather than my real one?
+- [x] Stick it in a docker container
+- [x] Readonly filesystem except project dir
 - [x] Vpn for docker to protect IP.
 - [ ] Stream deck button to pause sending commands to vim
 - [ ] Donations to execute bash commands? 🤔
