@@ -1,7 +1,5 @@
 services:
   vpn:
-    profiles:
-      - ${USE_VPN:-false}
     image: ghcr.io/bubuntux/nordlynx:latest
     cap_add:
       - NET_ADMIN
@@ -18,7 +16,7 @@ services:
 
   twitch-plays-vim:
     build: .
-    network_mode: ${USE_VPN:+service:vpn}${USE_VPN:-bridge}
+    network_mode: service:vpn
     tty: true
     stdin_open: true
     volumes:
@@ -26,13 +24,9 @@ services:
       - ./init.lua:/home/vimuser/.config/nvim/init.lua
     environment:
       - ALLOW_CONSOLE=1
-      - TWITCH_CHANNEL=skalkid
-    ports:
-      - ${USE_VPN:+""}${USE_VPN:-127.0.0.1:9999:9999}
+      - TWITCH_CHANNEL=${TWITCH_CHANNEL}
     depends_on:
-      vpn:
-        condition: service_started
-        required: false
+      - vpn
     # Add security configurations
     security_opt:
       - no-new-privileges:true

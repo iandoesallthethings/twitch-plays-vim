@@ -7,12 +7,9 @@ Listens to Twitch. Sends to vim.
 Just needs a few `.env` things
 
 ```bash
-COMPOSE_BAKE=true                   # Makes docker build faster
-ALLOW_CONSOLE=1                     # The neovim library hijacks stdout, so they use winston
-TWITCH_CHANNEL=yourtwitchchannel    # What chat stream to listen to
-
-# Vpn setup so nobody can write code to leak your ip: (optional)
-USE_VPN=true # or false
+ALLOW_CONSOLE=1             # The neovim library hijacks stdout, so they use winston
+TWITCH_CHANNEL=channelname  # What chat stream to listen to
+USE_VPN=false               # Or true. Just populate your nord creds
 NORDVPN_TOKEN=
 NORDVPN_PRIVATE_KEY=
 ```
@@ -44,4 +41,4 @@ bun run watch
 - [x] Readonly filesystem except project dir
 - [x] Vpn for docker to protect IP.
 - [ ] Stream deck button to pause sending commands to vim
-- [ ] Donations to execute bash commands? 🤔
+- [ ] Donations to execute bash commands like npm or pip install? 🤔
